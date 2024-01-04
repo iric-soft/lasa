@@ -5,7 +5,7 @@ It's a R Shiny app which launches severals analyses on Leucegene surfaceome coho
 ## Cite
 
  - Paper: [Immunotherapeutic targeting of surfaceome heterogeneity in AML]()
- - DOI of the code, using Zenodo: [![DOI](https://zenodo.org/badge/739109138.svg)](https://zenodo.org/doi/10.5281/zenodo.10460001)
+ - Code DOI: [![DOI](https://zenodo.org/badge/739109138.svg)](https://zenodo.org/doi/10.5281/zenodo.10460001)
 
 ## Requirement
 
