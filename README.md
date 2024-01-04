@@ -2,6 +2,11 @@ This is the web interface to LASA: Leucegene AML Surfaceome Atlas.
 
 It's a R Shiny app which launches severals analyses on Leucegene surfaceome cohort.
 
+## Cite
+
+ - Paper: [Immunotherapeutic targeting of surfaceome heterogeneity in AML]()
+ - DOI of the code using, Zenodo: [![DOI](https://zenodo.org/badge/739109138.svg)](https://zenodo.org/doi/10.5281/zenodo.10460001)
+
 ## Requirement
 
  - R version 4.0.0 (DEP, used to analyse surfaceome data, doesn't work on R > 4.0.0)
