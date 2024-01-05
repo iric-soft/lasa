@@ -94,15 +94,20 @@ shinyServer(function(input, output, session) {
     }
   )
   
-  output$downloadSingleCellDesign <- downloadHandler(
-    file = "leucegene_singleCell_design.tsv",
-    content = function(file) {
-      withProgress(message = 'Prepare data...', value = 0.80, {
-        file_design = file.path(path_sc, "single_cell_design.tsv")
-        file.copy(file_design, file)
-      })
-    }
-  )
+  #output$downloadSingleCellDesign <- downloadHandler(
+  #  file = "leucegene_singleCell_design.tsv",
+  #  content = function(file) {
+  #    withProgress(message = 'Prepare data...', value = 0.80, {
+  #      file_design = file.path(path_sc, "single_cell_design.tsv")
+  #      file.copy(file_design, file)
+  #    })
+  #  }
+  #)
+  
+  output$loomObject <- renderUI({
+    url <- a("Single cell Loom file", href="https://lasa.leucegene.ca/sc/sc_samples.loom")
+    tagList("Click on link to download loom sc file: ", url)
+  })
 
   update_list_comparison <- function(input) {
     cond = unique(df_design$subgroup)

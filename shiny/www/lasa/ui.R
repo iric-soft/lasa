@@ -1112,10 +1112,16 @@ shinyUI(
                 downloadButton('downloadTanscriptomeDesign', 'Transcriptome - analysis design')
               )
             ),
+            #fluidRow(
+            #  column(1,),
+            #  column(6,
+            #         downloadButton('downloadSingleCellDesign', 'Single-cell RNA sequencing - analysis design')
+            #  )
+            #),
             fluidRow(
               column(1,),
               column(6,
-                     downloadButton('downloadSingleCellDesign', 'Single-cell RNA sequencing - analysis design')
+                     uiOutput("loomObject")
               )
             )
           )
