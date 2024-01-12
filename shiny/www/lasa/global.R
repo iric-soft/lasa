@@ -108,39 +108,36 @@ scLoom <<- connect(filename=file_in, mode = "r", skip.validate = TRUE)
 
 
 levelCellTypeGrouped = c(
-  "CD34+ HSC", "CD34+ MultiLin", "CD34+ LMPP", "CD34+ Gran",
-  "Mature myeloid lineage", "CD34+ Eo/B/Mast", "CD34+ MDP",
+  "CD34+ HSC","CD34+ MultiLin", "CD34+ LMPP", 
+  "Mature myeloid lineage", "Mast cell", 
   "Dendritic cells", "Monocyte", "Erythrocytic lineage",
   "Megakaryocytic lineage", "CD34+ CLP", "B cell lineage",
   "Plasma Cell", "T/NK cell lineage", "Stromal"
 )
 
-color_list_grouped  <<- Dict$new(
+color_palette_grouped  = c(
   'CD34+ HSC' = '#5A3AAB', 'CD34+ MultiLin' = '#BF7EED',   
-  'CD34+ Gran' = '#08306B', 'Mature myeloid lineage' = '#08519C', 
+  'Mature myeloid lineage' = '#08519C', 
   'Monocyte' = '#26A657',
-  'Dendritic cells' = '#89F5D1', 'CD34+ MDP' = '#71E3BD', 
+  'Dendritic cells' = '#89F5D1', 
   'CD34+ LMPP' = "#C83DE0",  'CD34+ CLP' = "#CF5BE3", 
   'B cell lineage' = '#FFC2CD', 
-  'CD34+ Eo/B/Mast' = '#575f88',
+  "Mast cell" = '#575f88',
   'Erythrocytic lineage' = "#DC143C", 'Megakaryocytic lineage' = '#ed9393',
   'T/NK cell lineage' = '#FDAE6B',  
   'Plasma Cell' = '#C71585', 'Stromal' = "#ffd000"
 )
 
-color_palette_grouped <<- as.list(color_list_grouped$values)
-names(color_palette_grouped) <- color_list_grouped$keys
-
-
-
 levelCellType = c(
-  "CD34+ HSC", "CD34+ MultiLin", "CD34+ LMPP", "CD34+ Gran",
-  "Granulocytic-UNK", "CD34+ Eo/B/Mast", "CD34+ MDP", "CD14+ Monocyte",
-  "CD16+ Monocyte", "Pre-Dendritic", "pDC", "cDC", "CD34+ MEP",
-  "CD34+ ERP-Early", "CD34+ ERP", "Early-Erythroblast", "Erythroblast",
-  "CD34+ MKP", "Platelet", "CD34+ CLP", "CD34+ pre-PC", "Pro-B",
-  "Follicular B cell", "Plasma Cell", "CD34+ pre-T", "Naive T-cell",
-  "CD8 T-cell", "NK cells", "Stromal"
+  'CD34+ HSC','CD34+ HSC-cycle','CD34+ MultiLin','Promyelocyte','Myelocyte','Metamyelocyte/Band neutrophil',
+  'S100A+ preNeutrophil','S100A+ preNeutrophil (cycling)','CD14+MHCIIlow monocyte','CD14+MHCIIhigh monocyte',
+  'CD16+ monocyte','Macrophage','CDP','cDC1','cDC2 (cycling)','cDC2','MoDC','pre-pDC (myeloid origin)',
+  'pre-pDC (lymphoid origin)','pDC','Mast cell','CD34+ MEP','Megakaryocyte progenitor','Megakaryocyte',
+  'Platelet','Early SOX4+ erythroblast','Intermediate EPCAM+ erythroblast','Late hemoglobin+ erythroblast',
+  'Erythrocyte','CD34+ LMPP','CD34+ CLP','preB cell (cycling)','preB cell','proB cell (cycling)','proB cell',
+  'Naive B cell','Memory B cell','Plasma Cell','ILC','T/NK cell (cycling)','Naive CD8 T cell','Naive CD4 T cell',
+  'Effector/Memory CD4 T cell','Treg','GZMK+ CD8 T cell','GZMB+ CD8 T cell','MAIT','Gamma-delta T cell',
+  'IFN-activated T cell','CD16+ NK','Tissue-resident NK cell','CD56+ NK','Stromal'
 )
 
 color_list  <<- Dict$new(
@@ -157,52 +154,65 @@ color_list  <<- Dict$new(
   'Plasma Cell'  = '#C71585',  'Stromal'  = "#ffd000"
 )
 
-color_palette <<- as.list(color_list$values)
-names(color_palette) <- color_list$keys
 
 
-
-
-
-sample_colors <<- Dict$new(
-  '06H088' ='#c5fe74', #KMT2A-r
-  '05H066' ='#85ea46', #KMT2A-r
-  '02H017' ='#3cd672', #KMT2A-r
-  '09H032' ='#0fec59', #KMT2A-r
-  '09H010' ='#04b135', #KMT2A-r
-  
-  '18H047' ='#0474b1', #CK
-  '12H138' ='#098fd7', #CK
-  '12H106' ='#7fc9f1', #CK
-  '11H103' ='#3ac5e8', #CK
-  
-  '14H007' ='#a53ae8', #NK triple-mut
-  '12H010' ='#c47ff2', #NK triple-mut
-  '07H134' ='#ed88d3', #NK triple-mut
-  '09H070' ='#f50cba', #NPM1-mut
-  
-  '11H097' ='#585554', #del(5q)
-  '17H065' ='#aa9f9b', #del(5q)
-  '05H034' ='#eecdc2', #del(5q)
-  '04H096' ='#d9d5d4', #mono 7
-  '05H193' ='#c19587', #mono 7
-  
-  '08H087' ='#f3960c', #RUNX1-mut
-  '03H112' ='#f46e31'  #inv(16)
+color_palette <<- c(
+  'CD34+ HSC' = '#5A3AAB','CD34+ HSC-cycle' = '#7F38CF','CD34+ MultiLin' = '#BF7EED','Promyelocyte'= '#365D93',
+  'Myelocyte'= '#4D7BA8','Metamyelocyte/Band neutrophil'= '#6489BD','S100A+ preNeutrophil'= '#7AA7D2',
+  'S100A+ preNeutrophil (cycling)'= '#91C5E7',    'CD14+MHCIIlow monocyte'= '#2357F9',
+  'CD14+MHCIIhigh monocyte'= '#5E80FF','CD16+ monocyte'= '#1242e4','Macrophage'= '#0F35B0',    
+  'CDP'= '#009999','cDC1'= '#00E6E6','cDC2 (cycling)'= '#00B2B2','cDC2'= '#00CCCC','MoDC'= '#28b5f7',
+  'pre-pDC (myeloid origin)'= '#006633','pre-pDC (lymphoid origin)'= '#008066','pDC'= '#00FFFF', 
+  'Mast cell' = '#575f88' , 'CD34+ MEP' = '#78222E','Megakaryocyte progenitor'= '#8C2B3D','Megakaryocyte'= '#A03D51',
+  'Platelet' = '#ed9393','Early SOX4+ erythroblast'= '#B75268','Intermediate EPCAM+ erythroblast'= '#C9617A',
+  'Late hemoglobin+ erythroblast'= '#DA748C','Erythrocyte'= '#DC143C',    'CD34+ LMPP' = "#C83DE0",'CD34+ CLP' = "#CF5BE3",     
+  'preB cell (cycling)'= '#D582F0', 'preB cell'='#D986E7', 'proB cell (cycling)'='#E091E1', 'proB cell'='#E69DDC', 
+  'Naive B cell'= '#EEA9D6','Memory B cell'='#F3B6D1', 'Plasma Cell' = '#C71585','ILC' = '#faa997',  
+  'T/NK cell (cycling)'= '#FF5733','Naive CD8 T cell'= '#FF7F50','Naive CD4 T cell'= '#FFA07A',
+  'Effector/Memory CD4 T cell'= '#FFC2A7','Treg'= '#FFD1A7','GZMK+ CD8 T cell'= '#FEDCB3',
+  'GZMB+ CD8 T cell'= '#FEE0C2','MAIT'= '#FEE5D0','Gamma-delta T cell'= '#FEEBDB','IFN-activated T cell'= '#FEEDE6',
+  'CD16+ NK'= '#FEC9A8','Tissue-resident NK cell'= '#FED6BB','CD56+ NK'= '#FEE2CE','Stromal' = "#ffd000"
 )
-sample_palette <<- as.list(sample_colors$values)
-names(sample_palette) <- sample_colors$keys
 
-AML_colors <<- Dict$new(
-  'KMT2A rearranged'  ='#3cd672', #KMT2A-r '06H088','05H066','02H017','09H032','09H010'
-  'Complex karyotype' ='#098fd7', #CK '18H047','12H138','12H106','11H103'
-  'NK triple mut'     ='#c47ff2', #NK triple-mut  '14H007','12H010','07H134'
-  'NPM1 mutated'      ='#f50cba', #NPM1-mut '09H070'
-  'Deletion 5q'       ='#aa9f9b', #del(5q) '11H097','17H065','05H034'
-  'Monosomy 7'        ='#c19587', #mono 7 '04H096','05H193'
-  'RUNX1 mutated'     ='#f3960c', #RUNX1-mut
-  'inv(16)'           ='#f46e31' #inv(16)
+
+sample_palette <<- c(
+  '06H088'='#c5fe74', #KMT2A-r
+  '05H066'='#85ea46', #KMT2A-r
+  '09H032'='#0fec59', #KMT2A-r
+  '09H010'='#04b135', #KMT2A-r
+  '02H017'='#3cd672', #KMT2A-r
+
+  '12H138'='#098fd7', #CK
+  '12H106'='#7fc9f1', #CK
+  '18H047'='#0474b1', #CK
+  '11H103'='#3ac5e8', #CK
+
+  '14H007'='#a53ae8', #NK triple-mut
+  '12H010'='#c47ff2', #NK triple-mut
+  '07H134'='#ed88d3', #NK triple-mut
+  '09H070'='#f50cba', #NPM1-mut
+
+  '17H065'='#aa9f9b', #del(5q)
+  '11H097'='#585554', #del(5q)
+  '05H034'='#eecdc2', #del(5q)
+
+  '05H193'='#c19587', #mono 7
+  '04H096'='#d9d5d4', #mono 7
+
+
+  '08H087'='#f3960c', #RUNX1-mut
+  '03H112'='#f46e31' #inv(16)
 )
-aml_palette <<- as.list(AML_colors$values)
-names(aml_palette) <- AML_colors$keys
+
+
+aml_palette <<- c(
+  'KMT2A rearranged'  ='#3cd672', 
+  'Complex karyotype' ='#098fd7', 
+  'NK triple mut'     ='#c47ff2', 
+  'NPM1 mutated'      ='#f50cba', 
+  'Deletion 5q'       ='#aa9f9b', 
+  'Monosomy 7'        ='#c19587', 
+  'RUNX1 mutated'     ='#f3960c', 
+  'inv(16)'           ='#f46e31' 
+)
 

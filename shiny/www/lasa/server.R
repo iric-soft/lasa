@@ -108,7 +108,7 @@ shinyServer(function(input, output, session) {
     url <- a("Single cell Loom file", href="https://lasa.leucegene.ca/sc/sc_samples.loom")
     tagList("Click on link to download loom sc file: ", url)
   })
-
+  
   update_list_comparison <- function(input) {
     cond = unique(df_design$subgroup)
     cond = paste(cond, ' vs other', sep='')

@@ -399,7 +399,7 @@ plot_sc_umap = function(type, cellTypeGrouped=T) {
     sample={
       palette_choosed = sample_palette
     },
-    AML_subgroup={
+    AML_subtype={
       palette_choosed = aml_palette
     }
   )
@@ -422,15 +422,21 @@ plot_sc_umap = function(type, cellTypeGrouped=T) {
   gg = gg + geom_point(size=0.8, aes(colour = factor(df_umap[,4]))) 
   # gg = gg + ggtitle("UMAP")
   gg = gg + theme(panel.background = element_blank(),
-    plot.title = element_text(size=20,hjust = 0.5), 
+    plot.title = element_text(size=16,hjust = 0.5), 
     axis.text=element_blank(),
     axis.ticks = element_blank(),
     axis.title=element_blank(),
-    legend.text = element_text(size = 10)
+    legend.text = element_text(size = 8)
   ) 
   gg = gg + scale_colour_manual(values = palette_choosed)
-  gg = gg + guides(colour = guide_legend(override.aes = list(size=10)))
   
+  if (length(unique(df_umap[type])[,1]) > 25) {
+    gg = gg + guides(colour = guide_legend(override.aes = list(size=7), ncol=2))
+  }
+  else {
+    gg = gg + guides(colour = guide_legend(override.aes = list(size=7)))
+  }
+
   return(gg)
 }
 
@@ -456,7 +462,7 @@ plot_sc_track_genes_exp = function(genes, type, cellTypeGrouped=T) {
     sample={
       palette_choosed = sample_palette
     },
-    AML_subgroup={
+    AML_subtype={
       palette_choosed = aml_palette
     }
   )
@@ -480,16 +486,28 @@ plot_sc_track_genes_exp = function(genes, type, cellTypeGrouped=T) {
   df_all =c()
   dfhsc = c()
   set.seed(42)
-  for (celltype in unique(df_show$Classification)){
-    if (dim(df_show[df_show$Classification == celltype,])[1] >= 300){
-      if (celltype == 'CD34+ HSC'){
-        dfhsc <- sample_n(df_show[df_show$Classification == 'CD34+ HSC',], 1000)        
-      }
-      else{
-        df_all <- rbind(df_all, sample_n(df_show[df_show$Classification == celltype,], 300))
+  if (cellTypeGrouped) {
+    for (celltype in unique(df_show$Classification)) {
+      if (dim(df_show[df_show$Classification == celltype,])[1] >= 1000) {
+        df_all <- rbind(df_all, sample_n(df_show[df_show$Classification == celltype,], 1000))
+      } else {
+        df_all <- rbind(df_all, df_show[df_show$Classification == celltype,])}
+    }
+    df_show <- df_all
+  } else {
+    for (celltype in unique(df_show$Classification)) {      
+      if (dim(df_show[df_show$Classification == celltype,])[1] >= 300) {
+        if (celltype == 'CD34+ HSC'){
+          dfhsc <- sample_n(df_show[df_show$Classification == 'CD34+ HSC',], 1000)
+        } else {
+          df_all <- rbind(df_all, sample_n(df_show[df_show$Classification == celltype,], 300))}
+      } else {
+        df_all <- rbind(df_all, df_show[df_show$Classification == celltype,])
       }
     }
+    df_show <- rbind(dfhsc,df_all)
   }
+
   df_show <- rbind(dfhsc,df_all)
 
   tmpLevels = levelCellType
@@ -511,17 +529,27 @@ plot_sc_track_genes_exp = function(genes, type, cellTypeGrouped=T) {
   gg = ggplot(econdatalong, aes(x=factor(cellIDs, levels = unique(cellIDs)), y=Expression, fill=Annotation)) 
   gg = gg + geom_bar(position = 'dodge', stat='identity', alpha=1, width = 5) 
   gg = gg + scale_fill_manual(name=type, values=palette_choosed)
+  gg = gg + ggtitle("Gene expressions tracks on a subset of cells, downsampled per population")
   gg = gg + theme(
     panel.background = element_blank(),
     axis.text.x = element_blank(),
     axis.title.y =  element_text(size=15),
     legend.position="right",
-    strip.text = element_text(size=12,hjust = 0.5, face = 'bold'), 
+    strip.text = element_text(size=16,hjust = 0.5, face = 'bold'), 
     axis.ticks.x = element_blank(),
-    axis.title.x = element_blank()
+    axis.title.x = element_blank(),
+    plot.title = element_text(hjust = 0.5)
   )
-  gg = gg + ylim(0,4) 
+  # Banafsheh ask to remove it
+  # gg = gg + ylim(0,4) 
   gg = gg + facet_wrap(~Gene, ncol=1)
+  
+  if (length(unique(df_show$Annotation)) > 25) {
+    gg = gg + guides(fill = guide_legend(override.aes = list(size=7), ncol=2))
+  }
+  else {
+    gg = gg + guides(fill = guide_legend(override.aes = list(size=7)))
+  }
   
   return(gg)
 }
@@ -542,7 +570,7 @@ plot_sc_umap_genes_exp = function(genes) {
   gg = gg + geom_point(size=0.4)
   gg = gg + theme(
     panel.background = element_blank(), legend.position = "left",
-    strip.text = element_text(size=12,hjust = 0.5, face = 'bold'), 
+    strip.text = element_text(size=16,hjust = 0.5, face = 'bold'), 
     axis.text=element_blank(),axis.ticks = element_blank(),
     axis.title=element_blank()
   )
@@ -567,7 +595,7 @@ plot_sc_umap_gene_exp = function(gene) {
   gg = gg + geom_point(size=0.8)
   gg = gg + theme(
     panel.background = element_blank(), legend.position = "left",
-    strip.text = element_text(size=12,hjust = 0.5, face = 'bold'), 
+    strip.text = element_text(size=16,hjust = 0.5, face = 'bold'), 
     axis.text=element_blank(),axis.ticks = element_blank(),
     axis.title=element_blank()
   )
@@ -591,65 +619,75 @@ format_subgroup <- function(AML_subg) {
   return(AML_subg)
 }
 
-
-
 format_classification <- function(Classification) {
-  Classification[which(Classification == "Granulocytic-UNK")] = "Mature myeloid lineage"
-  Classification[which(Classification == "Immature-Neutrophil")] = "Mature myeloid lineage"
-  Classification[which(Classification == "Committed Neutrophil")] = "Mature myeloid lineage"
-  Classification[which(Classification == "Neutrophil")] = "Mature myeloid lineage"
+  Classification = as.character(Classification)
   
-  Classification[which(Classification == "Pre-Dendritic")] = "Myeloid dendritic cells"
-  Classification[which(Classification == "Dendritic Cell_Lympho")] = "Myeloid dendritic cells"
-  Classification[which(Classification == "Dendritic Cell_Myelo")] = "Myeloid dendritic cells"
+  Classification[which(Classification %in% c(
+    "CDP","cDC1","cDC2 (cycling)","cDC2","MoDC","pre-pDC (myeloid origin)",
+    "pre-pDC (lymphoid origin)","pDC"
+  ))] = "Dendritic cells"
   
-  Classification[which(Classification == "CD34+ MEP")] = "Erythrocytic lineage"
-  Classification[which(Classification == "CD34+ ERP")] = "Erythrocytic lineage"
-  Classification[which(Classification == "CD34+ ERP-Early")] = "Erythrocytic lineage"
-  Classification[which(Classification == "Early-Erythroblast")] = "Erythrocytic lineage"
-  Classification[which(Classification == "Erythroblast")] = "Erythrocytic lineage"
+  Classification[which(Classification %in% c(
+    "Promyelocyte","Myelocyte","Metamyelocyte/Band neutrophil",
+    "S100A+ preNeutrophil","S100A+ preNeutrophil (cycling)"
+  ))] = "Mature myeloid lineage"
   
-  Classification[which(Classification == "CD34+ MKP")] = "Megakaryocytic lineage"
-  Classification[which(Classification == "Platelet")] = "Megakaryocytic lineage"
   
-  Classification[which(Classification == "CD34+ pre-PC")] = "B cell lineage"
-  Classification[which(Classification == "Pro-B")] = "B cell lineage"
-  Classification[which(Classification == "Follicular B cell")] = "B cell lineage"
+  Classification[which(Classification %in% c(
+    "Early SOX4+ erythroblast","Intermediate EPCAM+ erythroblast",
+    "Late hemoglobin+ erythroblast","Erythrocyte"
+  ))] =  "Erythrocytic lineage"
   
-  Classification[which(Classification == "CD34+ pre-T")] = "T/NK cell lineage"
-  Classification[which(Classification == "Naive T-cell")] = "T/NK cell lineage"
-  Classification[which(Classification == "CD8 T-cell")] = "T/NK cell lineage"
-  Classification[which(Classification == "NK cells")] = "T/NK cell lineage"
+  Classification[which(Classification %in% c(
+    "preB cell (cycling)","preB cell","proB cell (cycling)","proB cell",
+    "Naive B cell","Memory B cell"
+  ))] =   "B cell lineage"
   
-  Classification[which(Classification == "CD14+ Monocyte")] = "Monocyte"
-  Classification[which(Classification == "CD16+ Monocyte")] = "Monocyte"
+  Classification[which(Classification %in% c(
+    "ILC","T/NK cell (cycling)","Naive CD8 T cell","Naive CD4 T cell",
+    "Effector/Memory CD4 T cell","Treg","GZMK+ CD8 T cell","GZMB+ CD8 T cell",
+    "MAIT","Gamma-delta T cell","IFN-activated T cell","CD16+ NK",
+    "Tissue-resident NK cell","CD56+ NK"
+  ))] =  "T/NK cell lineage"
   
-  Classification[which(Classification == "cDC")] = "Dendritic cells"
-  Classification[which(Classification == "pDC")] = "Dendritic cells"
-  Classification[which(Classification == "Myeloid dendritic cells")] = "Dendritic cells"
+  Classification[which(Classification %in% c(
+    "CD14+MHCIIlow monocyte","CD14+MHCIIhigh monocyte",
+    "CD16+ monocyte","Macrophage"
+  ))] =  "Monocyte"
+  
+  Classification[which(Classification %in% c(
+    "CD34+ MEP","Megakaryocyte progenitor","Megakaryocyte","Platelet"
+  ))] =  "Megakaryocytic lineage"
+  
+  Classification[which(Classification %in% c(
+    "CD34+ HSC", "CD34+ HSC-cycle"
+  ))] =  "CD34+ HSC"
+  
+  Classification <- as.factor(Classification)
   
   return(Classification)
 }
 
-
 factor_classification <- function(df_res, cellTypeGrouped) {
   if (cellTypeGrouped) {
     df_res$CellType = factor(df_res$CellType, levels=c(
-      "CD34+ HSC", "CD34+ MultiLin", "CD34+ LMPP", "CD34+ Gran",
-      "Mature myeloid lineage", "CD34+ Eo/B/Mast", "CD34+ MDP",
+      "CD34+ HSC", "CD34+ MultiLin", "CD34+ LMPP",
+      "Mature myeloid lineage", "Mast cell", 
       "Dendritic cells", "Monocyte", "Erythrocytic lineage",
       "Megakaryocytic lineage", "CD34+ CLP", "B cell lineage",
       "Plasma Cell", "T/NK cell lineage", "Stromal"
     ))
   } else {
     df_res$CellType = factor(df_res$CellType, levels=c(
-      "CD34+ HSC", "CD34+ MultiLin", "CD34+ LMPP", "CD34+ Gran",
-      "Granulocytic-UNK", "CD34+ Eo/B/Mast", "CD34+ MDP", "CD14+ Monocyte",
-      "CD16+ Monocyte", "Pre-Dendritic", "pDC", "cDC", "CD34+ MEP",
-      "CD34+ ERP-Early", "CD34+ ERP", "Early-Erythroblast", "Erythroblast",
-      "CD34+ MKP", "Platelet", "CD34+ CLP", "CD34+ pre-PC", "Pro-B",
-      "Follicular B cell", "Plasma Cell", "CD34+ pre-T", "Naive T-cell",
-      "CD8 T-cell", "NK cells", "Stromal"
+      "CD34+ HSC","CD34+ HSC-cycle","CD34+ MultiLin","Promyelocyte","Myelocyte","Metamyelocyte/Band neutrophil",
+      "S100A+ preNeutrophil","S100A+ preNeutrophil (cycling)","CD14+MHCIIlow monocyte","CD14+MHCIIhigh monocyte",
+      "CD16+ monocyte","Macrophage","CDP","cDC1","cDC2 (cycling)","cDC2","MoDC","pre-pDC (myeloid origin)",
+      "pre-pDC (lymphoid origin)","pDC","Mast cell","CD34+ MEP","Megakaryocyte progenitor","Megakaryocyte",
+      "Platelet","Early SOX4+ erythroblast","Intermediate EPCAM+ erythroblast","Late hemoglobin+ erythroblast",
+      "Erythrocyte","CD34+ LMPP","CD34+ CLP","preB cell (cycling)","preB cell","proB cell (cycling)","proB cell",
+      "Naive B cell","Memory B cell","Plasma Cell","ILC","T/NK cell (cycling)","Naive CD8 T cell","Naive CD4 T cell",
+      "Effector/Memory CD4 T cell","Treg","GZMK+ CD8 T cell","GZMB+ CD8 T cell","MAIT","Gamma-delta T cell",
+      "IFN-activated T cell","CD16+ NK","Tissue-resident NK cell","CD56+ NK","Stromal"
     ))
   }
   
@@ -663,7 +701,7 @@ get_zscore <- function(expr) {
 
 plot_sc_plot <- function(gene.list, cellType, zscore, zscoreByGene=TRUE, cellTypeGrouped=TRUE, palette="YlOrRd") {
   
-  AML_subg = scLoom[["col_attrs/AML_subgroup"]][]
+  AML_subg = scLoom[["col_attrs/AML_subtype"]][]
   AML_subg = format_subgroup(AML_subg)
   
   if (cellType != "All") {
@@ -824,7 +862,7 @@ plot_sc_heatmap = function(gene.list, sc_heatmap_subgroup, zscore, cellTypeGroup
     Classification = format_classification(Classification)
   }
   
-  AML_subg = scLoom[["col_attrs/AML_subgroup"]][]
+  AML_subg = scLoom[["col_attrs/AML_subtype"]][]
   AML_subg = format_subgroup(AML_subg)
   if (sc_heatmap_subgroup != "All") {
     index_subg = which(AML_subg == sc_heatmap_subgroup)

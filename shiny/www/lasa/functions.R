@@ -173,6 +173,7 @@ get_detection <- function(df_ms, exp_design, col_as_condition, subgroup, overvie
   }
   
   df_ms = df_ms[which(df_ms$sd_log2_int <= overview_max_sd),]
+  df_ms = df_ms[which(df_ms$mean_log2_int > 0),]
   
   return(df_ms)
 }

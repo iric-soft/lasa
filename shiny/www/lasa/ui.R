@@ -960,7 +960,7 @@ shinyUI(
                       width = 4,
                       selectInput(
                         "sc_track_type", "Select a color legend:",
-                        choices=c("Classification", "sample", "AML_subgroup"),
+                        choices=c("Classification", "sample", "AML_subtype"),
                         selected="Classification"
                       )
                     ),
@@ -1012,7 +1012,7 @@ shinyUI(
                       width = 3,
                       selectInput(
                         "sc_umap_type", "Select a color legend:",
-                        choices=c("Classification", "sample", "AML_subgroup"),
+                        choices=c("Classification", "sample", "AML_subtype"),
                         selected="Classification"
                       )
                     ),
