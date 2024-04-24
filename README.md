@@ -9,7 +9,7 @@ A live version is available at [https://lasa.leucegene.ca](https://lasa.leucegen
 ## Publication
 
  * [Immunotherapeutic targeting of surfaceome heterogeneity in AML]() 
-   * Using version X.X.X referenced on zenodo at [update this url](https://zenodo.org/doi/10.5281/zenodo.10460001)
+   * Using version 0.0.1 referenced on zenodo at [update this url](https://zenodo.org/doi/10.5281/zenodo.10460001)
 
 ## Requirement
 
@@ -20,8 +20,6 @@ A live version is available at [https://lasa.leucegene.ca](https://lasa.leucegen
 ## Data
 
 All data used in LASA can be found in the **Data** folder, except for single cell data which are too large. To get single cell data check the download section of [LASA](https://lasa.leucegene.ca) and copy/extract the downloaded file **as** data/singleCell/sc_samples.loom
-
-**Data folder will be added when the paper will be accepted.**
 
 For more details, or to generate data on your own, see the method section of [Immunotherapeutic targeting of surfaceome heterogeneity in AML]().
 
