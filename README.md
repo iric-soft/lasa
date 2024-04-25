@@ -9,7 +9,7 @@ A live version is available at [https://lasa.leucegene.ca](https://lasa.leucegen
 ## Publication
 
  * [Immunotherapeutic targeting of surfaceome heterogeneity in AML]() 
-   * Using version 0.0.1 referenced on zenodo at [update this url](https://zenodo.org/doi/10.5281/zenodo.10460001)
+   * Using version 0.0.1 referenced on [zenodo](https://zenodo.org/records/11061966)
 
 ## Requirement
 
